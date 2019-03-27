@@ -1,0 +1,41 @@
+
+syntax = "proto3";
+package protocol.src;
+
+service User{
+    rpc DeductMoney(DeductMoneyRequest) returns (DeductMoneyResponse){}
+    rpc Recharge(RechargeRequest) returns (RechargeResponse){}
+}
+
+//扣钱请求
+message DeductMoneyRequest{
+    string agent = 1;
+    string encrypt_user_name = 2;//加密后的会员名
+    double amount = 3;
+}
+
+//扣钱响应
+message DeductMoneyResponse{
+    int32 result_code = 1;
+    string desc = 2;
+    Result restult = 3;
+}
+
+message Result{
+    double amount = 1;
+    string order_sn = 2;//充值流水号
+}
+
+//充值请求
+message RechargeRequest{
+    string agent = 1;
+    string encrypt_user_name = 2;
+    double amount = 3;
+    int32 deposit_type = 4;
+}
+//充值响应
+message RechargeResponse{
+    int32 result_code = 1;
+    string desc = 2;
+    Result restult = 3;
+}
