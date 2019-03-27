@@ -7,11 +7,12 @@ service User{
     rpc Recharge(RechargeRequest) returns (RechargeResponse){}
 }
 
-//扣钱请求
+//扣钱请求（下注）
 message DeductMoneyRequest{
-    string agent = 1;
-    string encrypt_user_name = 2;//加密后的会员名
+    string hall_id = 1;
+    int64 user_id = 2;
     double amount = 3;
+    string desc = 4;
 }
 
 //扣钱响应
@@ -26,14 +27,13 @@ message Result{
     string order_sn = 2;//充值流水号
 }
 
-//充值请求
+//加钱请求（派彩）
 message RechargeRequest{
-    string agent = 1;
-    string encrypt_user_name = 2;
+    string hall_id = 1;
+    int64 user_id = 2;
     double amount = 3;
-    int32 deposit_type = 4;
 }
-//充值响应
+//加钱响应
 message RechargeResponse{
     int32 result_code = 1;
     string desc = 2;
