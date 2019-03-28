@@ -3,12 +3,16 @@ package main
 import (
 	"log"
 	"net"
+	"rpcserver/slog"
 
 	"google.golang.org/grpc"
 )
 
 func main() {
-	lis, err := net.Listen("tcp", 9013)
+	slog.NewLog(Cfg.LogLevel, true, 10)
+	slog.Info("server starting up version:", version)
+
+	lis, err := net.Listen("tcp", Cfg.TcpPort)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

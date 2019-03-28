@@ -1,50 +1,68 @@
 package main
 
-import "context"
+import (
+	"context"
+	"rpcserver/protocol"
+	"rpcserver/util"
+
+	_ "github.com/go-sql-driver/mysql"
+	"gopkg.in/mgo.v2"
+)
 
 type User struct{}
 
-//扣钱接口
-func (u *User) DeductMoney(ctx context.Context, req *pb.DeductMoneyRequest) (*pb.DeductMoneyResponse, error) {
-	if(req.hall_id <= 0 || req.user_id <= 0){
-		return &pb.DeductMoneyResponse{
-			result_code : -1,
-			desc : "hall_id or user_id <=0",
-			restult : {
-				amount: 0.0,
-				order_sn: ""
+var TableNameMap map
+
+//GetTableName 获取分表名称
+func GetTableName(hall_id int32) string {
+	var tableName string
+	if tn, ok := TableNameMap[hall_id];ok{
+		tableName = tn
+	}else{
+		//从db中查询出来，存入内存中
+
+	}
+	tableName = "lb_user_1"
+	return tableName
+}
+
+
+//现金操作接口
+func (u *User) CashOpera(ctx context.Context, req *protocol.DeductMoneyRequest) (*protocol.DeductMoneyResponse, error) {
+	if(req.HallId <= 0 || req.UserId <= 0){
+		return &protocol.DeductMoneyResponse{
+			ResultCode : -1,
+			Desc : "hall_id or user_id <=0",
+			Restult : {
+				Amount: req.Amount,
+				OrderSn: ""
 			}
-		}, fmt.Errorf("param is wrong!")
+		}, fmt.Errorf("Param is wrong!")
 	}
 
 	pushmongo(func(){
 		mgo := mgoSession.Copy()
 		defer mgo.Close()
+
 		doc := bson.M{
-			"order_sn":      grid,
-			"uid":           playdata.userID,
-			"agent_id":      playdata.agentID,
-			"hall_id":       playdata.hallID,
-			"user_name":     playdata.account,
-			"type":          itype,
-			"amount":        totalBetValue + withholdingMoneys,
-			"status":        4,
-			"user_money":    nowmoney,
-			"desc":          roundno,
-			"admin_user":    playdata.account,
-			"admin_user_id": playdata.userID,
-			"cash_no":       roundno,
+			"order_sn":      "qxtestid",
+			"uid":           req.UserId,
+			"agent_id":      req.AgentId,
+			"hall_id":       req.HallId,
+			"user_name":     req.UserName,
+			"type":          req.Type,
+			"amount":        req.Amount,
 			"add_time":      time.Now(),
-			"pKey":          pKey,
 		}
 
-		if err := session.DB("").C("cash_record").Insert(doc); err != nil {
+		if err := session.DB("").C("cash_record_test").Insert(doc); err != nil {
 			docjosn, _ := json.Marshal(doc)
 			slog.ErrorDB("cash_record failed err:", err, string(docjosn))
+			return
 		}
 		pushmysql(func(){
 			tablename := GetTableName(hall_id)
-			result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET password=?, password_md=? WHERE uid=? AND password=? LIMIT 1", tablename), strNewPwd, strNewPwd, s.userid, strOldPwd)
+			result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
 			if err != nil {
 				slog.ErrorDB(err)
 				return
@@ -53,18 +71,12 @@ func (u *User) DeductMoney(ctx context.Context, req *pb.DeductMoneyRequest) (*pb
 			if err != nil {
 				slog.ErrorDB(err)
 			}
-			if rows < 0 {
-				
+			if rows < 0 {//未修改成功
+				slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
 			}
 
 		})
 
 	})
 }
-
-//加钱接口
-func (u *User) Recharge(ctx context.Context, req *pb.RechargeRequest) (*pb.RechargeResponse, error) {
-
-}
-
 
