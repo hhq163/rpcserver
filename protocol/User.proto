@@ -1,0 +1,38 @@
+
+syntax = "proto3";
+package protocol;
+
+service User{
+    rpc CashOpera(CashOperRequest) returns (CashOperResponse){}
+}
+
+enum CashType {
+    UNKNOWN = 0;    //未知
+    RECHARGE = 1;   //API充值
+    DEDUCT_MONEY = 2;   //API扣款
+    ADD_GOLD = 3;      //下注
+    PAYOUT = 4;     //派彩
+  }
+
+//现金操作请求
+message CashOperRequest{
+    int32 hall_id = 1;
+    int32 agent_id = 2;
+    int64 user_id = 3;
+    string hall_name = 4;
+    string user_name = 5;
+    double amount = 6;  //金额，带正负
+    CashType type = 7;
+}
+
+//现金操作响应
+message CashOperResponse{
+    int32 result_code = 1;
+    string desc = 2;
+    Result restult = 3;
+}
+
+message Result{
+    double amount = 1;
+    string order_sn = 2;//充值流水号
+}

@@ -1,0 +1,11 @@
+#开发环境配置
+LogLevel:   "Info"
+TcpPort: 9013
+
+MySqlURL:     "root:123456@tcp(192.168.31.231:3306)/lb_livegame?charset=utf8"
+MySqlThreads: 100
+
+MongoURL:     "mongodb://hhq163:bx123456@192.168.31.231:27017/live_game"
+MongoThreads:  100
+
+DebugMode: false
