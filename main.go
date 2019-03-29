@@ -22,6 +22,7 @@ func main() {
 	slog.Info("start 1111")
 	protocol.RegisterUserServer(s, &User{})
 	slog.Info("start 2222")
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
