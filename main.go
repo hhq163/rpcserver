@@ -19,13 +19,15 @@ func main() {
 	}
 	slog.Info("start 0000")
 	s := grpc.NewServer()
+	slog.Info("start 1111")
 	protocol.RegisterUserServer(s, &User{})
+	slog.Info("start 2222")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-	slog.Info("start 1111")
+
 	//初始化数据库连接池
 	InitDB()
 	StartWorkers()
-	slog.Info("start 2222")
+
 }
