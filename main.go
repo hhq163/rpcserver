@@ -26,7 +26,7 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-
+	slog.Info("start 3333")
 	//初始化数据库连接池
 	InitDB()
 	StartWorkers()
