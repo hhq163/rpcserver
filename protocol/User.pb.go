@@ -4,8 +4,12 @@
 package protocol
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -281,4 +285,84 @@ var fileDescriptor_979821478719c248 = []byte{
 	0x78, 0x58, 0x46, 0x85, 0xb3, 0xe7, 0x3b, 0x7b, 0x72, 0xfb, 0xab, 0xab, 0x97, 0x50, 0xbf, 0xbc,
 	0xf9, 0xd9, 0xaf, 0xd0, 0xc3, 0x8f, 0xff, 0x03, 0x00, 0x00, 0xff, 0xff, 0xa3, 0x1d, 0xdf, 0xa3,
 	0x4c, 0x02, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// UserClient is the client API for User service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type UserClient interface {
+	CashOpera(ctx context.Context, in *CashOperRequest, opts ...grpc.CallOption) (*CashOperResponse, error)
+}
+
+type userClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewUserClient(cc *grpc.ClientConn) UserClient {
+	return &userClient{cc}
+}
+
+func (c *userClient) CashOpera(ctx context.Context, in *CashOperRequest, opts ...grpc.CallOption) (*CashOperResponse, error) {
+	out := new(CashOperResponse)
+	err := c.cc.Invoke(ctx, "/protocol.User/CashOpera", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UserServer is the server API for User service.
+type UserServer interface {
+	CashOpera(context.Context, *CashOperRequest) (*CashOperResponse, error)
+}
+
+// UnimplementedUserServer can be embedded to have forward compatible implementations.
+type UnimplementedUserServer struct {
+}
+
+func (*UnimplementedUserServer) CashOpera(ctx context.Context, req *CashOperRequest) (*CashOperResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CashOpera not implemented")
+}
+
+func RegisterUserServer(s *grpc.Server, srv UserServer) {
+	s.RegisterService(&_User_serviceDesc, srv)
+}
+
+func _User_CashOpera_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CashOperRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CashOpera(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protocol.User/CashOpera",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CashOpera(ctx, req.(*CashOperRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _User_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "protocol.User",
+	HandlerType: (*UserServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CashOpera",
+			Handler:    _User_CashOpera_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "User.proto",
 }

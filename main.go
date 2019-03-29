@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net"
+	"rpcserver/protocol"
 	"rpcserver/slog"
 
 	"google.golang.org/grpc"
@@ -17,7 +18,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterGreeterServer(s, &User{})
+	protocol.RegisterUserServer(s, &User{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
