@@ -18,6 +18,11 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	slog.Info("start 0000")
+
+	//初始化数据库连接池
+	InitDB()
+	StartWorkers()
+
 	s := grpc.NewServer()
 	slog.Info("start 1111")
 	protocol.RegisterUserServer(s, &User{})
@@ -27,8 +32,5 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 	slog.Info("start 3333")
-	//初始化数据库连接池
-	InitDB()
-	StartWorkers()
 
 }
