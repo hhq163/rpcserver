@@ -11,9 +11,9 @@ import (
 
 func main() {
 	slog.NewLog(Cfg.LogLevel, true, 10)
-	slog.Info("server starting up version:", version)
+	slog.Info("rpcserver starting up")
 
-	lis, err := net.Listen("tcp", Cfg.TcpPort)
+	lis, err := net.Listen("tcp", Cfg.Address)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

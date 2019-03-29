@@ -15,7 +15,7 @@ var Cfg Config
 
 type Config struct {
 	LogLevel string `yaml:"LogLevel"`
-	TcpPort  int    `yaml:"TcpPort"`
+	Address  string `yaml:"Address"`
 
 	MySqlURL     string `yaml:"MySqlURL"`
 	MySqlThreads int    `yaml:"MySqlThreads"`
