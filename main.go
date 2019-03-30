@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"mangos/logicsvr/config"
 	"net"
+	"net/http"
 	"rpcserver/protocol"
 	"rpcserver/slog"
 
@@ -10,6 +12,9 @@ import (
 )
 
 func main() {
+	if config.Cfg.DebugMode {
+		go profile()
+	}
 	slog.NewLog(Cfg.LogLevel, true, 10)
 	slog.Info("rpcserver starting up")
 
@@ -29,4 +34,8 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 
+}
+
+func profile() {
+	log.Fatal(http.ListenAndServe("0.0.0.0:9912", nil))
 }
