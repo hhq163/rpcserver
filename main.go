@@ -8,6 +8,8 @@ import (
 	"rpcserver/protocol"
 	"rpcserver/slog"
 
+	_ "net/http/pprof"
+
 	"google.golang.org/grpc"
 )
 
