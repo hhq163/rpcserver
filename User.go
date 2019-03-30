@@ -41,7 +41,7 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 			},
 		}, fmt.Errorf("Param is wrong!")
 	}
-	slog.Info("UserId:", req.UserId, ",AgentId:", req.AgentId, ",HallId:", req.HallId, ",UserName:", req.UserName, ", Amount:", req.Amount, "Type:", req.Type)
+	// slog.Info("UserId:", req.UserId, ",AgentId:", req.AgentId, ",HallId:", req.HallId, ",UserName:", req.UserName, ", Amount:", req.Amount, "Type:", req.Type)
 
 	pushmongo(func() {
 		mgo := mgoSession.Copy()

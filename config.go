@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"io/ioutil"
 	"log"
 	"os"
@@ -27,11 +26,11 @@ type Config struct {
 }
 
 func init() {
-	versiontype := flag.String("t", "dev", "发布环境，如test，可选项dev,test,docker,release")
-	flag.Parse()
+	// versiontype := flag.String("t", "dev", "发布环境，如test，可选项dev,test,docker,release")
+	// flag.Parse()
 
 	//ReadFile函数会读取文件的全部内容，并将结果以[]
-	filename := GetExecpath() + "/conf-" + *versiontype + ".yaml"
+	filename := GetExecpath() + "/conf-dev.yaml"
 	log.Print(filename)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
