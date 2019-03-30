@@ -82,7 +82,7 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 	})
 
 	return &protocol.CashOperResponse{
-		ResultCode: -1,
+		ResultCode: 1,
 		Desc:       "oper success",
 		Restult: &protocol.Result{
 			Amount:  req.Amount,
