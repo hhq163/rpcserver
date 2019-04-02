@@ -3,7 +3,7 @@ syntax = "proto3";
 package protocol;
 
 service User{
-    rpc CashOpera(stream CashOperRequest) returns (stream CashOperResponse){}
+    rpc CashOpera(CashOperRequest) returns (CashOperResponse){}
 }
 
 enum CashType {

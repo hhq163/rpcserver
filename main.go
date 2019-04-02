@@ -27,7 +27,6 @@ func main() {
 
 	//初始化数据库连接池
 	InitDB()
-	StartWorkers()
 
 	s := grpc.NewServer()
 	protocol.RegisterUserServer(s, &User{})
@@ -35,7 +34,6 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-	StopWorkers()
 }
 
 func profile() {
