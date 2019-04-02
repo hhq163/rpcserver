@@ -44,17 +44,18 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 	// slog.Info("UserId:", req.UserId, ",AgentId:", req.AgentId, ",HallId:", req.HallId, ",UserName:", req.UserName, ", Amount:", req.Amount, "Type:", req.Type)
 
 	pushmongo(func() {
+		reqs := *req
 		mgo := mgoSession.Copy()
 		defer mgo.Close()
 
 		doc := bson.M{
 			"order_sn":  "qxtestid",
-			"uid":       req.UserId,
-			"agent_id":  req.AgentId,
-			"hall_id":   req.HallId,
-			"user_name": req.UserName,
-			"type":      req.Type,
-			"amount":    req.Amount,
+			"uid":       reqs.UserId,
+			"agent_id":  reqs.AgentId,
+			"hall_id":   reqs.HallId,
+			"user_name": reqs.UserName,
+			"type":      reqs.Type,
+			"amount":    reqs.Amount,
 			"add_time":  time.Now(),
 		}
 
@@ -64,8 +65,8 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 			return
 		}
 		pushmysql(func() {
-			tablename := GetTableName(req.HallId)
-			result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
+			// tablename := GetTableName(reqs.HallId)
+			result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE lb_user_1 SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1"), reqs.Amount, reqs.HallId, reqs.UserId)
 			if err != nil {
 				slog.ErrorDB(err)
 				return
@@ -75,7 +76,7 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 				slog.ErrorDB(err)
 			}
 			if rows < 0 { //未修改成功
-				slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
+				slog.ErrorDB("update money failed ,hall_id=", reqs.HallId, "user_id=", reqs.UserId)
 			}
 
 		})
