@@ -2,6 +2,8 @@ package main
 
 import (
 	"math/rand"
+	"rpcserver/protocol"
+	"rpcserver/slog"
 	"time"
 )
 
@@ -16,9 +18,10 @@ type sqlMsg struct {
 	UserID   int64
 	HallName string
 	UserName string
-	amount   float64
+	Amount   float64
 	Itype    int32
-	TimeOut  chan int //单位为秒
+	TimeOut  int //单位为秒
+	Res      chan *protocol.CashOperResponse
 }
 
 var sqlTaskChan = make(chan *sqlMsg, chanLen)
@@ -31,7 +34,7 @@ func init() {
 	for i := 0; i < workNumber; i++ {
 		taskChan := make(chan *sqlMsg, chanLen)
 		sqlTaskMap[i] = taskChan // insert to task map
-		go EmailWorkTask(taskChan)
+		go SqlWorkTask(taskChan)
 	}
 }
 
@@ -49,9 +52,42 @@ func SqlMainTask() {
 }
 
 //sql工作协程
-func EmailWorkTask(taskChan chan *sqlMsg) {
+func SqlWorkTask(taskChan chan *sqlMsg) {
 
-	for task := range taskChan {
+	for msg := range taskChan {
+		now := time.Now().Unix()
+		//消息超时
+		if msg.AddTime.Unix()+int64(msg.TimeOut) < now {
+			msg.Res <- &protocol.CashOperResponse{
+				ResultCode: 1,
+				Desc:       "out of time",
+				Restult: &protocol.Result{
+					Amount:  msg.Amount,
+					OrderSn: "",
+				},
+			}
+			return
+		}
 
+		result, err := mysqlDB.Exec("UPDATE lb_user_1 SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", msg.Amount, msg.HallId, msg.UserId)
+		if err != nil {
+			slog.ErrorDB(err)
+			msg.Res <- &protocol.CashOperResponse{
+				ResultCode: 1,
+				Desc:       "update record failed ",
+				Restult: &protocol.Result{
+					Amount:  msg.Amount,
+					OrderSn: "",
+				},
+			}
+			return
+		}
+		rows, err := result.RowsAffected()
+		if err != nil {
+			slog.ErrorDB(err)
+		}
+		if rows < 0 { //未修改成功
+			slog.ErrorDB("update money failed ,hall_id=", msg.HallId, "user_id=", msg.UserId)
+		}
 	}
 }
