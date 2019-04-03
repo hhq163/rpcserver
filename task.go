@@ -8,7 +8,7 @@ import (
 )
 
 var chanLen = 10000
-var workNumber = 30
+var workNumber = 1000
 
 //邮件消息
 type sqlMsg struct {
@@ -21,7 +21,7 @@ type sqlMsg struct {
 	Amount   float64
 	Itype    int32
 	TimeOut  int //单位为秒
-	Res      chan *protocol.CashOperResponse
+	ResChan  chan *protocol.CashOperResponse
 }
 
 var sqlTaskChan = make(chan *sqlMsg, chanLen)
@@ -58,7 +58,7 @@ func SqlWorkTask(taskChan chan *sqlMsg) {
 		now := time.Now().Unix()
 		//消息超时
 		if msg.AddTime.Unix()+int64(msg.TimeOut) < now {
-			msg.Res <- &protocol.CashOperResponse{
+			msg.ResChan <- &protocol.CashOperResponse{
 				ResultCode: 1,
 				Desc:       "out of time",
 				Restult: &protocol.Result{
@@ -69,10 +69,12 @@ func SqlWorkTask(taskChan chan *sqlMsg) {
 			return
 		}
 
-		result, err := mysqlDB.Exec("UPDATE lb_user_1 SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", msg.Amount, msg.HallId, msg.UserId)
+		slog.Info("UserId:", msg.UserID, ",HallId:", msg.HallID)
+
+		result, err := mysqlDB.Exec("UPDATE lb_user_1 SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", msg.Amount, msg.HallID, msg.UserID)
 		if err != nil {
 			slog.ErrorDB(err)
-			msg.Res <- &protocol.CashOperResponse{
+			msg.ResChan <- &protocol.CashOperResponse{
 				ResultCode: 1,
 				Desc:       "update record failed ",
 				Restult: &protocol.Result{
@@ -87,7 +89,16 @@ func SqlWorkTask(taskChan chan *sqlMsg) {
 			slog.ErrorDB(err)
 		}
 		if rows < 0 { //未修改成功
-			slog.ErrorDB("update money failed ,hall_id=", msg.HallId, "user_id=", msg.UserId)
+			slog.ErrorDB("update money failed ,hall_id=", msg.HallID, "user_id=", msg.UserID)
 		}
+		msg.ResChan <- &protocol.CashOperResponse{
+			ResultCode: 0,
+			Desc:       "CashOpera success",
+			Restult: &protocol.Result{
+				Amount:  msg.Amount,
+				OrderSn: "",
+			},
+		}
+
 	}
 }

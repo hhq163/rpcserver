@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"rpcserver/protocol"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -39,51 +40,26 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 	}
 	// slog.Info("UserId:", req.UserId, ",AgentId:", req.AgentId, ",HallId:", req.HallId, ",UserName:", req.UserName, ", Amount:", req.Amount, "Type:", req.Type)
 
-	// pushmongo(func() {
-	// 	mgo := mgoSession.Copy()
-	// 	defer mgo.Close()
+	ResChan := make(chan *protocol.CashOperResponse)
+	cashMsg := &sqlMsg{
+		AddTime:  time.Now(),
+		HallID:   req.HallId,
+		AgentID:  req.AgentId,
+		UserID:   req.UserId,
+		HallName: req.HallName,
+		UserName: req.UserName,
+		Amount:   req.Amount,
+		Itype:    int32(req.Type),
+		TimeOut:  5,
+		ResChan:  ResChan,
+	}
+	sqlTaskChan <- cashMsg
 
-	// 	doc := bson.M{
-	// 		"order_sn":  "qxtestid",
-	// 		"uid":       req.UserId,
-	// 		"agent_id":  req.AgentId,
-	// 		"hall_id":   req.HallId,
-	// 		"user_name": req.UserName,
-	// 		"type":      req.Type,
-	// 		"amount":    req.Amount,
-	// 		"add_time":  time.Now(),
-	// 	}
-
-	// 	if err := mgo.DB("").C("cash_record_test").Insert(doc); err != nil {
-	// 		docjosn, _ := json.Marshal(doc)
-	// 		slog.ErrorDB("cash_record failed err:", err, string(docjosn))
-	// 		return
-	// 	}
-	// 	pushmysql(func() {
-	// 		tablename := GetTableName(req.HallId)
-	// 		result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
-	// 		if err != nil {
-	// 			slog.ErrorDB(err)
-	// 			return
-	// 		}
-	// 		rows, err := result.RowsAffected()
-	// 		if err != nil {
-	// 			slog.ErrorDB(err)
-	// 		}
-	// 		if rows < 0 { //未修改成功
-	// 			slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
-	// 		}
-
-	// 	})
-	// })
-
-	return &protocol.CashOperResponse{
-		ResultCode: 1,
-		Desc:       "oper success",
-		Restult: &protocol.Result{
-			Amount:  req.Amount,
-			OrderSn: "",
-		},
-	}, nil
+	res := <-ResChan
+	if res.ResultCode == 0 {
+		return res, nil
+	} else {
+		return res, fmt.Errorf("err: %s", res.Desc)
+	}
 
 }
