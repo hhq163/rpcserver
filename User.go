@@ -121,8 +121,9 @@ func (u *User) CashOpera(stream protocol.User_CashOperaServer) error {
 					slog.Error("stream.Send error, hall_id=", req.HallId, "user_id=", req.UserId, ", err=", err)
 					return
 				}
-
+				return
 			})
+			return
 		})
 
 	}
