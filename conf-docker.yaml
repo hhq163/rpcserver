@@ -1,0 +1,12 @@
+#开发环境配置
+LogLevel:   "Info"
+Address:  "0.0.0.0:8001"
+
+MySqlURL:     "Mysqladmin:Mysql1707!@tcp(10.200.124.24:3306)/lb_livegame_test?charset=utf8"
+MySqlThreads: 100
+
+#MongoURL:     "mongodb://Liveadmin:Lv201888*@10.200.124.27:30000/live_game"
+MongoURL:     "mongodb://hhq163:bx123456@10.200.124.23:27017/live_game"
+MongoThreads:  100
+
+DebugMode: false
