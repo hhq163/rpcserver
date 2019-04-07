@@ -8,13 +8,24 @@ import (
 	"rpcserver/slog"
 	"time"
 
+	"google.golang.org/grpc"
+
 	_ "github.com/go-sql-driver/mysql"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type User struct{}
+type HallUserID struct {
+	HallID int32
+	UserID int32
+}
 
 var TableNameMap map[int32]string
+var StreamMap map[HallUserID]grpc.ServerStream
+
+func init() {
+	StreamMap = make(map[HallUserID]grpc.ServerStream)
+}
 
 //GetTableName 获取分表名称
 func GetTableName(hall_id int32) string {
@@ -31,6 +42,7 @@ func GetTableName(hall_id int32) string {
 
 //现金操作接口
 func (u *User) CashOpera(stream protocol.User_CashOperaServer) error {
+
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
@@ -129,4 +141,31 @@ func (u *User) CashOpera(stream protocol.User_CashOperaServer) error {
 	}
 	return nil
 
+}
+
+//获取玩家信息
+func (u *User) GetUserInfo(stream protocol.User_GetUserInfoServer) error {
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		if req.HallId <= 0 || req.UserId <= 0 {
+			return fmt.Errorf("Param is wrong!")
+		}
+
+		if _, ok := StreamMap[HallUserID{req.HallId, int32(req.UserId)}]; !ok {
+			StreamMap[HallUserID{req.HallId, int32(req.UserId)}] = stream.ServerStream
+		}
+
+	}
+
+	return nil
+}
+
+func (u *User) GetBalance(stream protocol.User_GetBalanceServer) error {
+	return nil
 }

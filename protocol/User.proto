@@ -3,7 +3,9 @@ syntax = "proto3";
 package protocol;
 
 service User{
-    rpc CashOpera(CashOperRequest) returns (CashOperResponse){}
+    rpc CashOpera(stream CashOperRequest) returns (stream CashOperResponse){}
+    rpc GetUserInfo(stream GetUserInfoRequest)returns (stream GetUserInfoResponse){}
+    rpc GetBalance(stream GetBalanceRequest)returns (stream GetBalanceResponse){}
 }
 
 enum CashType {
@@ -13,6 +15,38 @@ enum CashType {
     ADD_GOLD = 3;      //下注
     PAYOUT = 4;     //派彩
   }
+
+enum GameType{
+    OTHERS = 0;    //未知
+    LIVEGAME = 1;//视讯
+    LOTTERY = 2;//彩票
+}
+
+//获取用户信息
+message GetUserInfoRequest{
+    int32 hall_id = 1;
+    int64 user_id = 2;
+    GameType gtype = 3;
+}
+
+message GetUserInfoResponse{
+    int32 hall_id = 1;
+    int64 user_id = 2;
+    string user_name = 3;
+}
+
+//获取玩家余额
+message GetBalanceRequest{
+    int32 hall_id = 1;
+    int64 user_id = 2;
+    GameType gtype = 3;
+}
+
+message GetBalanceResponse{
+    int32 hall_id = 1;
+    int64 user_id = 2;
+    double amount = 3;  //金额，带正负
+}
 
 //现金操作请求
 message CashOperRequest{

@@ -58,6 +58,256 @@ func (CashType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_979821478719c248, []int{0}
 }
 
+type GameType int32
+
+const (
+	GameType_OTHERS   GameType = 0
+	GameType_LIVEGAME GameType = 1
+	GameType_LOTTERY  GameType = 2
+)
+
+var GameType_name = map[int32]string{
+	0: "OTHERS",
+	1: "LIVEGAME",
+	2: "LOTTERY",
+}
+
+var GameType_value = map[string]int32{
+	"OTHERS":   0,
+	"LIVEGAME": 1,
+	"LOTTERY":  2,
+}
+
+func (x GameType) String() string {
+	return proto.EnumName(GameType_name, int32(x))
+}
+
+func (GameType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_979821478719c248, []int{1}
+}
+
+//获取用户信息
+type GetUserInfoRequest struct {
+	HallId               int32    `protobuf:"varint,1,opt,name=hall_id,json=hallId,proto3" json:"hall_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Gtype                GameType `protobuf:"varint,3,opt,name=gtype,proto3,enum=protocol.GameType" json:"gtype,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetUserInfoRequest) Reset()         { *m = GetUserInfoRequest{} }
+func (m *GetUserInfoRequest) String() string { return proto.CompactTextString(m) }
+func (*GetUserInfoRequest) ProtoMessage()    {}
+func (*GetUserInfoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_979821478719c248, []int{0}
+}
+
+func (m *GetUserInfoRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetUserInfoRequest.Unmarshal(m, b)
+}
+func (m *GetUserInfoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetUserInfoRequest.Marshal(b, m, deterministic)
+}
+func (m *GetUserInfoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetUserInfoRequest.Merge(m, src)
+}
+func (m *GetUserInfoRequest) XXX_Size() int {
+	return xxx_messageInfo_GetUserInfoRequest.Size(m)
+}
+func (m *GetUserInfoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetUserInfoRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetUserInfoRequest proto.InternalMessageInfo
+
+func (m *GetUserInfoRequest) GetHallId() int32 {
+	if m != nil {
+		return m.HallId
+	}
+	return 0
+}
+
+func (m *GetUserInfoRequest) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *GetUserInfoRequest) GetGtype() GameType {
+	if m != nil {
+		return m.Gtype
+	}
+	return GameType_OTHERS
+}
+
+type GetUserInfoResponse struct {
+	HallId               int32    `protobuf:"varint,1,opt,name=hall_id,json=hallId,proto3" json:"hall_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserName             string   `protobuf:"bytes,3,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetUserInfoResponse) Reset()         { *m = GetUserInfoResponse{} }
+func (m *GetUserInfoResponse) String() string { return proto.CompactTextString(m) }
+func (*GetUserInfoResponse) ProtoMessage()    {}
+func (*GetUserInfoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_979821478719c248, []int{1}
+}
+
+func (m *GetUserInfoResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetUserInfoResponse.Unmarshal(m, b)
+}
+func (m *GetUserInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetUserInfoResponse.Marshal(b, m, deterministic)
+}
+func (m *GetUserInfoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetUserInfoResponse.Merge(m, src)
+}
+func (m *GetUserInfoResponse) XXX_Size() int {
+	return xxx_messageInfo_GetUserInfoResponse.Size(m)
+}
+func (m *GetUserInfoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetUserInfoResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetUserInfoResponse proto.InternalMessageInfo
+
+func (m *GetUserInfoResponse) GetHallId() int32 {
+	if m != nil {
+		return m.HallId
+	}
+	return 0
+}
+
+func (m *GetUserInfoResponse) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *GetUserInfoResponse) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+//获取玩家余额
+type GetBalanceRequest struct {
+	HallId               int32    `protobuf:"varint,1,opt,name=hall_id,json=hallId,proto3" json:"hall_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Gtype                GameType `protobuf:"varint,3,opt,name=gtype,proto3,enum=protocol.GameType" json:"gtype,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetBalanceRequest) Reset()         { *m = GetBalanceRequest{} }
+func (m *GetBalanceRequest) String() string { return proto.CompactTextString(m) }
+func (*GetBalanceRequest) ProtoMessage()    {}
+func (*GetBalanceRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_979821478719c248, []int{2}
+}
+
+func (m *GetBalanceRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBalanceRequest.Unmarshal(m, b)
+}
+func (m *GetBalanceRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBalanceRequest.Marshal(b, m, deterministic)
+}
+func (m *GetBalanceRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBalanceRequest.Merge(m, src)
+}
+func (m *GetBalanceRequest) XXX_Size() int {
+	return xxx_messageInfo_GetBalanceRequest.Size(m)
+}
+func (m *GetBalanceRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBalanceRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBalanceRequest proto.InternalMessageInfo
+
+func (m *GetBalanceRequest) GetHallId() int32 {
+	if m != nil {
+		return m.HallId
+	}
+	return 0
+}
+
+func (m *GetBalanceRequest) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *GetBalanceRequest) GetGtype() GameType {
+	if m != nil {
+		return m.Gtype
+	}
+	return GameType_OTHERS
+}
+
+type GetBalanceResponse struct {
+	HallId               int32    `protobuf:"varint,1,opt,name=hall_id,json=hallId,proto3" json:"hall_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Amount               float64  `protobuf:"fixed64,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetBalanceResponse) Reset()         { *m = GetBalanceResponse{} }
+func (m *GetBalanceResponse) String() string { return proto.CompactTextString(m) }
+func (*GetBalanceResponse) ProtoMessage()    {}
+func (*GetBalanceResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_979821478719c248, []int{3}
+}
+
+func (m *GetBalanceResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetBalanceResponse.Unmarshal(m, b)
+}
+func (m *GetBalanceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetBalanceResponse.Marshal(b, m, deterministic)
+}
+func (m *GetBalanceResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetBalanceResponse.Merge(m, src)
+}
+func (m *GetBalanceResponse) XXX_Size() int {
+	return xxx_messageInfo_GetBalanceResponse.Size(m)
+}
+func (m *GetBalanceResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetBalanceResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetBalanceResponse proto.InternalMessageInfo
+
+func (m *GetBalanceResponse) GetHallId() int32 {
+	if m != nil {
+		return m.HallId
+	}
+	return 0
+}
+
+func (m *GetBalanceResponse) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *GetBalanceResponse) GetAmount() float64 {
+	if m != nil {
+		return m.Amount
+	}
+	return 0
+}
+
 //现金操作请求
 type CashOperRequest struct {
 	HallId               int32    `protobuf:"varint,1,opt,name=hall_id,json=hallId,proto3" json:"hall_id,omitempty"`
@@ -76,7 +326,7 @@ func (m *CashOperRequest) Reset()         { *m = CashOperRequest{} }
 func (m *CashOperRequest) String() string { return proto.CompactTextString(m) }
 func (*CashOperRequest) ProtoMessage()    {}
 func (*CashOperRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_979821478719c248, []int{0}
+	return fileDescriptor_979821478719c248, []int{4}
 }
 
 func (m *CashOperRequest) XXX_Unmarshal(b []byte) error {
@@ -160,7 +410,7 @@ func (m *CashOperResponse) Reset()         { *m = CashOperResponse{} }
 func (m *CashOperResponse) String() string { return proto.CompactTextString(m) }
 func (*CashOperResponse) ProtoMessage()    {}
 func (*CashOperResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_979821478719c248, []int{1}
+	return fileDescriptor_979821478719c248, []int{5}
 }
 
 func (m *CashOperResponse) XXX_Unmarshal(b []byte) error {
@@ -214,7 +464,7 @@ func (m *Result) Reset()         { *m = Result{} }
 func (m *Result) String() string { return proto.CompactTextString(m) }
 func (*Result) ProtoMessage()    {}
 func (*Result) Descriptor() ([]byte, []int) {
-	return fileDescriptor_979821478719c248, []int{2}
+	return fileDescriptor_979821478719c248, []int{6}
 }
 
 func (m *Result) XXX_Unmarshal(b []byte) error {
@@ -251,6 +501,11 @@ func (m *Result) GetOrderSn() string {
 
 func init() {
 	proto.RegisterEnum("protocol.CashType", CashType_name, CashType_value)
+	proto.RegisterEnum("protocol.GameType", GameType_name, GameType_value)
+	proto.RegisterType((*GetUserInfoRequest)(nil), "protocol.GetUserInfoRequest")
+	proto.RegisterType((*GetUserInfoResponse)(nil), "protocol.GetUserInfoResponse")
+	proto.RegisterType((*GetBalanceRequest)(nil), "protocol.GetBalanceRequest")
+	proto.RegisterType((*GetBalanceResponse)(nil), "protocol.GetBalanceResponse")
 	proto.RegisterType((*CashOperRequest)(nil), "protocol.CashOperRequest")
 	proto.RegisterType((*CashOperResponse)(nil), "protocol.CashOperResponse")
 	proto.RegisterType((*Result)(nil), "protocol.Result")
@@ -259,32 +514,41 @@ func init() {
 func init() { proto.RegisterFile("User.proto", fileDescriptor_979821478719c248) }
 
 var fileDescriptor_979821478719c248 = []byte{
-	// 388 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x91, 0x41, 0x6f, 0xd3, 0x40,
-	0x10, 0x85, 0xbb, 0x8d, 0x6b, 0x3b, 0x93, 0x0a, 0x56, 0x73, 0x80, 0xa4, 0x1c, 0xb0, 0x72, 0x40,
-	0x56, 0x0f, 0x39, 0x84, 0x23, 0xa7, 0x28, 0x8e, 0x4a, 0x44, 0xb1, 0x61, 0x49, 0x84, 0x7a, 0xb2,
-	0x4c, 0x76, 0x44, 0x91, 0x1c, 0xaf, 0xd9, 0x5d, 0x1f, 0xfa, 0x4f, 0xf9, 0x39, 0x68, 0xd7, 0xb1,
-	0xda, 0x4a, 0x3d, 0xd9, 0xef, 0x7d, 0x1e, 0xcf, 0xbc, 0x19, 0x80, 0xbd, 0x21, 0xbd, 0x68, 0xb5,
-	0xb2, 0x0a, 0x63, 0xff, 0x38, 0xa8, 0x7a, 0xfe, 0x8f, 0xc1, 0xeb, 0x75, 0x65, 0xee, 0x8b, 0x96,
-	0xb4, 0xa0, 0xbf, 0x1d, 0x19, 0x8b, 0x6f, 0x21, 0xba, 0xaf, 0xea, 0xba, 0xfc, 0x23, 0xa7, 0x2c,
-	0x61, 0xe9, 0x85, 0x08, 0x9d, 0xdc, 0x4a, 0x9c, 0x41, 0x5c, 0xfd, 0xa6, 0xc6, 0x3a, 0x72, 0xee,
-	0x49, 0xe4, 0xf5, 0x56, 0xba, 0x9a, 0xce, 0x90, 0x76, 0x64, 0x94, 0xb0, 0x74, 0x24, 0x42, 0x27,
-	0xb7, 0x12, 0xdf, 0xc1, 0xd8, 0xff, 0xac, 0xa9, 0x8e, 0x34, 0x0d, 0x12, 0x96, 0x8e, 0x45, 0xec,
-	0x8c, 0xbc, 0x3a, 0x92, 0x83, 0xbe, 0xca, 0xc3, 0x8b, 0x1e, 0x3a, 0xc3, 0xc3, 0x37, 0x10, 0x56,
-	0x47, 0xd5, 0x35, 0x76, 0x1a, 0x26, 0x2c, 0x65, 0xe2, 0xa4, 0xf0, 0x03, 0x04, 0xf6, 0xa1, 0xa5,
-	0x69, 0x94, 0xb0, 0xf4, 0xd5, 0x12, 0x17, 0x43, 0x96, 0x85, 0xcb, 0xb1, 0x7b, 0x68, 0x49, 0x78,
-	0x3e, 0x37, 0xc0, 0x1f, 0x93, 0x99, 0x56, 0x35, 0x86, 0xf0, 0x3d, 0x4c, 0x34, 0x99, 0xae, 0xb6,
-	0xe5, 0x41, 0x49, 0x3a, 0xc5, 0x83, 0xde, 0x5a, 0x2b, 0x49, 0x88, 0x10, 0x48, 0x32, 0x07, 0x1f,
-	0x6f, 0x2c, 0xfc, 0x3b, 0x5e, 0x43, 0xa4, 0xc9, 0xd8, 0xae, 0xb6, 0x3e, 0xdb, 0x64, 0xc9, 0x1f,
-	0x7b, 0x0a, 0x5f, 0x2a, 0x86, 0x0f, 0xe6, 0x9f, 0x20, 0xec, 0xad, 0x27, 0xe3, 0xb3, 0x67, 0xe3,
-	0xcf, 0x20, 0x56, 0x5a, 0x92, 0x2e, 0x4d, 0x73, 0xea, 0x12, 0x79, 0xfd, 0xa3, 0xb9, 0xfe, 0x0e,
-	0xf1, 0x90, 0x01, 0x27, 0x10, 0xed, 0xf3, 0x2f, 0x79, 0xf1, 0x33, 0xe7, 0x67, 0x78, 0x09, 0xb1,
-	0xd8, 0xac, 0x3f, 0xaf, 0xc4, 0xcd, 0x86, 0x33, 0xe4, 0x70, 0x99, 0x6d, 0xb2, 0xfd, 0x7a, 0x57,
-	0x7e, 0x2d, 0xf2, 0xcd, 0x1d, 0x3f, 0x77, 0x7c, 0x95, 0x65, 0xe5, 0x4d, 0x71, 0x9b, 0xf1, 0x11,
-	0x02, 0x84, 0xdf, 0x56, 0x77, 0xc5, 0x7e, 0xc7, 0x83, 0xe5, 0x2d, 0x04, 0xee, 0xee, 0x98, 0xc1,
-	0x78, 0x58, 0x46, 0x85, 0xb3, 0xe7, 0x3b, 0x7b, 0x72, 0xfb, 0xab, 0xab, 0x97, 0x50, 0xbf, 0xbc,
-	0xf9, 0xd9, 0xaf, 0xd0, 0xc3, 0x8f, 0xff, 0x03, 0x00, 0x00, 0xff, 0xff, 0xa3, 0x1d, 0xdf, 0xa3,
-	0x4c, 0x02, 0x00, 0x00,
+	// 535 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x94, 0x5f, 0x8f, 0xd2, 0x4c,
+	0x14, 0xc6, 0x77, 0xf8, 0xd3, 0x96, 0xc3, 0xe6, 0x7d, 0xeb, 0x98, 0xe8, 0xc2, 0xae, 0x91, 0xf4,
+	0xc2, 0x10, 0x2e, 0x88, 0xe2, 0xa5, 0x57, 0x08, 0x4d, 0x21, 0x02, 0x5d, 0x67, 0x8b, 0x86, 0x1b,
+	0x49, 0xa5, 0xc7, 0x5d, 0x93, 0xd2, 0xa9, 0x9d, 0xf6, 0x62, 0xbf, 0xa9, 0x5f, 0xc3, 0x6f, 0x60,
+	0x66, 0x4a, 0xa5, 0x5d, 0xd7, 0x98, 0xec, 0x85, 0x57, 0x70, 0xce, 0x33, 0x73, 0x9e, 0x79, 0x7e,
+	0x99, 0x29, 0xc0, 0x5a, 0x60, 0x32, 0x8c, 0x13, 0x9e, 0x72, 0x6a, 0xa8, 0x9f, 0x1d, 0x0f, 0xad,
+	0x18, 0xa8, 0x83, 0xa9, 0x94, 0xe6, 0xd1, 0x17, 0xce, 0xf0, 0x5b, 0x86, 0x22, 0xa5, 0x4f, 0x41,
+	0xbf, 0xf1, 0xc3, 0x70, 0xfb, 0x35, 0x38, 0x23, 0x3d, 0xd2, 0x6f, 0x32, 0x4d, 0x96, 0xf3, 0x40,
+	0x0a, 0x99, 0xc0, 0x44, 0x0a, 0xb5, 0x1e, 0xe9, 0xd7, 0x99, 0x26, 0xcb, 0x79, 0x40, 0xfb, 0xd0,
+	0xbc, 0x4e, 0x6f, 0x63, 0x3c, 0xab, 0xf7, 0x48, 0xff, 0xbf, 0x11, 0x1d, 0x16, 0x0e, 0x43, 0xc7,
+	0xdf, 0xa3, 0x77, 0x1b, 0x23, 0xcb, 0x17, 0x58, 0x01, 0x3c, 0xae, 0x38, 0x8a, 0x98, 0x47, 0x02,
+	0x1f, 0x60, 0x79, 0x0e, 0x2d, 0x25, 0x44, 0xfe, 0x3e, 0xb7, 0x6d, 0x31, 0x43, 0x36, 0x56, 0xfe,
+	0x1e, 0x2d, 0x0e, 0x8f, 0x1c, 0x4c, 0xdf, 0xfa, 0xa1, 0x1f, 0xed, 0xf0, 0x5f, 0xc4, 0xfa, 0xa4,
+	0x40, 0xfe, 0x32, 0x7c, 0x70, 0xaa, 0x27, 0xa0, 0xf9, 0x7b, 0x9e, 0x45, 0xa9, 0xb2, 0x24, 0xec,
+	0x50, 0x59, 0xdf, 0x09, 0xfc, 0x3f, 0xf1, 0xc5, 0x8d, 0x1b, 0x63, 0xf2, 0xd7, 0x3c, 0x1d, 0x30,
+	0xfc, 0x6b, 0x8c, 0xd2, 0x62, 0x7c, 0x93, 0xe9, 0xaa, 0xae, 0x1a, 0xd7, 0xef, 0xe2, 0x54, 0xc3,
+	0x14, 0xce, 0x46, 0x8e, 0x53, 0x36, 0x24, 0xce, 0x2a, 0xeb, 0x66, 0x95, 0x75, 0xe9, 0xc8, 0x5a,
+	0xf9, 0xc8, 0xf4, 0x05, 0x34, 0x14, 0x3b, 0xfd, 0x2e, 0x3b, 0x99, 0x43, 0xb1, 0x53, 0xba, 0x25,
+	0xc0, 0x3c, 0x26, 0x3b, 0x80, 0x7b, 0x0e, 0xed, 0x04, 0x45, 0x16, 0xa6, 0xdb, 0x1d, 0x0f, 0xf0,
+	0x10, 0x0f, 0xf2, 0xd6, 0x84, 0x07, 0x48, 0x29, 0x34, 0x02, 0x14, 0x3b, 0x15, 0xaf, 0xc5, 0xd4,
+	0x7f, 0x3a, 0x00, 0x3d, 0x41, 0x91, 0x66, 0x61, 0x0e, 0xaf, 0x3d, 0x32, 0x8f, 0x9e, 0x4c, 0x6d,
+	0x65, 0xc5, 0x02, 0xeb, 0x0d, 0x68, 0x79, 0xab, 0x74, 0x7c, 0x52, 0x39, 0x7e, 0x07, 0x0c, 0x9e,
+	0x04, 0x98, 0x6c, 0x45, 0x74, 0x70, 0xd1, 0x55, 0x7d, 0x15, 0x0d, 0xde, 0x83, 0x51, 0x64, 0xa0,
+	0x6d, 0xd0, 0xd7, 0xab, 0x77, 0x2b, 0xf7, 0xe3, 0xca, 0x3c, 0xa1, 0xa7, 0x60, 0x30, 0x7b, 0x32,
+	0x1b, 0x33, 0xc7, 0x36, 0x09, 0x35, 0xe1, 0x74, 0x6a, 0x4f, 0xd7, 0x13, 0x6f, 0xbb, 0x74, 0x57,
+	0xf6, 0xc6, 0xac, 0x49, 0x7d, 0x3c, 0x9d, 0x6e, 0x1d, 0x77, 0x31, 0x35, 0xeb, 0x14, 0x40, 0xbb,
+	0x1c, 0x6f, 0xdc, 0xb5, 0x67, 0x36, 0x06, 0xaf, 0xc0, 0x28, 0xae, 0x94, 0xec, 0xbb, 0xde, 0xcc,
+	0x66, 0x57, 0xf9, 0xc4, 0xc5, 0xfc, 0x83, 0xed, 0x8c, 0x97, 0x72, 0x62, 0x1b, 0xf4, 0x85, 0xeb,
+	0x79, 0x36, 0xdb, 0x98, 0xb5, 0xd1, 0x0f, 0x02, 0x0d, 0xf9, 0x8e, 0xe8, 0x0c, 0x5a, 0x05, 0x40,
+	0x9f, 0x76, 0xaa, 0x9c, 0x4b, 0xf7, 0xa5, 0xdb, 0xbd, 0x4f, 0xca, 0x81, 0x5b, 0x27, 0x7d, 0xf2,
+	0x92, 0xd0, 0x4b, 0x68, 0x97, 0x1e, 0x27, 0xbd, 0x28, 0xdd, 0xf7, 0xdf, 0xbe, 0x12, 0xdd, 0x67,
+	0x7f, 0x50, 0x2b, 0x13, 0x97, 0x00, 0xc7, 0x77, 0x41, 0xcf, 0x2b, 0x5b, 0xaa, 0xcf, 0xb3, 0x7b,
+	0x71, 0xbf, 0x58, 0x1e, 0xf7, 0x59, 0x53, 0x4b, 0x5e, 0xff, 0x0c, 0x00, 0x00, 0xff, 0xff, 0xb9,
+	0xe5, 0xcb, 0xac, 0xce, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -299,7 +563,9 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type UserClient interface {
-	CashOpera(ctx context.Context, in *CashOperRequest, opts ...grpc.CallOption) (*CashOperResponse, error)
+	CashOpera(ctx context.Context, opts ...grpc.CallOption) (User_CashOperaClient, error)
+	GetUserInfo(ctx context.Context, opts ...grpc.CallOption) (User_GetUserInfoClient, error)
+	GetBalance(ctx context.Context, opts ...grpc.CallOption) (User_GetBalanceClient, error)
 }
 
 type userClient struct {
@@ -310,59 +576,225 @@ func NewUserClient(cc *grpc.ClientConn) UserClient {
 	return &userClient{cc}
 }
 
-func (c *userClient) CashOpera(ctx context.Context, in *CashOperRequest, opts ...grpc.CallOption) (*CashOperResponse, error) {
-	out := new(CashOperResponse)
-	err := c.cc.Invoke(ctx, "/protocol.User/CashOpera", in, out, opts...)
+func (c *userClient) CashOpera(ctx context.Context, opts ...grpc.CallOption) (User_CashOperaClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_User_serviceDesc.Streams[0], "/protocol.User/CashOpera", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &userCashOperaClient{stream}
+	return x, nil
+}
+
+type User_CashOperaClient interface {
+	Send(*CashOperRequest) error
+	Recv() (*CashOperResponse, error)
+	grpc.ClientStream
+}
+
+type userCashOperaClient struct {
+	grpc.ClientStream
+}
+
+func (x *userCashOperaClient) Send(m *CashOperRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *userCashOperaClient) Recv() (*CashOperResponse, error) {
+	m := new(CashOperResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *userClient) GetUserInfo(ctx context.Context, opts ...grpc.CallOption) (User_GetUserInfoClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_User_serviceDesc.Streams[1], "/protocol.User/GetUserInfo", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userGetUserInfoClient{stream}
+	return x, nil
+}
+
+type User_GetUserInfoClient interface {
+	Send(*GetUserInfoRequest) error
+	Recv() (*GetUserInfoResponse, error)
+	grpc.ClientStream
+}
+
+type userGetUserInfoClient struct {
+	grpc.ClientStream
+}
+
+func (x *userGetUserInfoClient) Send(m *GetUserInfoRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *userGetUserInfoClient) Recv() (*GetUserInfoResponse, error) {
+	m := new(GetUserInfoResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *userClient) GetBalance(ctx context.Context, opts ...grpc.CallOption) (User_GetBalanceClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_User_serviceDesc.Streams[2], "/protocol.User/GetBalance", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userGetBalanceClient{stream}
+	return x, nil
+}
+
+type User_GetBalanceClient interface {
+	Send(*GetBalanceRequest) error
+	Recv() (*GetBalanceResponse, error)
+	grpc.ClientStream
+}
+
+type userGetBalanceClient struct {
+	grpc.ClientStream
+}
+
+func (x *userGetBalanceClient) Send(m *GetBalanceRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *userGetBalanceClient) Recv() (*GetBalanceResponse, error) {
+	m := new(GetBalanceResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // UserServer is the server API for User service.
 type UserServer interface {
-	CashOpera(context.Context, *CashOperRequest) (*CashOperResponse, error)
+	CashOpera(User_CashOperaServer) error
+	GetUserInfo(User_GetUserInfoServer) error
+	GetBalance(User_GetBalanceServer) error
 }
 
 // UnimplementedUserServer can be embedded to have forward compatible implementations.
 type UnimplementedUserServer struct {
 }
 
-func (*UnimplementedUserServer) CashOpera(ctx context.Context, req *CashOperRequest) (*CashOperResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CashOpera not implemented")
+func (*UnimplementedUserServer) CashOpera(srv User_CashOperaServer) error {
+	return status.Errorf(codes.Unimplemented, "method CashOpera not implemented")
+}
+func (*UnimplementedUserServer) GetUserInfo(srv User_GetUserInfoServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
+}
+func (*UnimplementedUserServer) GetBalance(srv User_GetBalanceServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetBalance not implemented")
 }
 
 func RegisterUserServer(s *grpc.Server, srv UserServer) {
 	s.RegisterService(&_User_serviceDesc, srv)
 }
 
-func _User_CashOpera_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CashOperRequest)
-	if err := dec(in); err != nil {
+func _User_CashOpera_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(UserServer).CashOpera(&userCashOperaServer{stream})
+}
+
+type User_CashOperaServer interface {
+	Send(*CashOperResponse) error
+	Recv() (*CashOperRequest, error)
+	grpc.ServerStream
+}
+
+type userCashOperaServer struct {
+	grpc.ServerStream
+}
+
+func (x *userCashOperaServer) Send(m *CashOperResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *userCashOperaServer) Recv() (*CashOperRequest, error) {
+	m := new(CashOperRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
-	if interceptor == nil {
-		return srv.(UserServer).CashOpera(ctx, in)
+	return m, nil
+}
+
+func _User_GetUserInfo_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(UserServer).GetUserInfo(&userGetUserInfoServer{stream})
+}
+
+type User_GetUserInfoServer interface {
+	Send(*GetUserInfoResponse) error
+	Recv() (*GetUserInfoRequest, error)
+	grpc.ServerStream
+}
+
+type userGetUserInfoServer struct {
+	grpc.ServerStream
+}
+
+func (x *userGetUserInfoServer) Send(m *GetUserInfoResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *userGetUserInfoServer) Recv() (*GetUserInfoRequest, error) {
+	m := new(GetUserInfoRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
 	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/protocol.User/CashOpera",
+	return m, nil
+}
+
+func _User_GetBalance_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(UserServer).GetBalance(&userGetBalanceServer{stream})
+}
+
+type User_GetBalanceServer interface {
+	Send(*GetBalanceResponse) error
+	Recv() (*GetBalanceRequest, error)
+	grpc.ServerStream
+}
+
+type userGetBalanceServer struct {
+	grpc.ServerStream
+}
+
+func (x *userGetBalanceServer) Send(m *GetBalanceResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *userGetBalanceServer) Recv() (*GetBalanceRequest, error) {
+	m := new(GetBalanceRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
 	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).CashOpera(ctx, req.(*CashOperRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return m, nil
 }
 
 var _User_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "protocol.User",
 	HandlerType: (*UserServer)(nil),
-	Methods: []grpc.MethodDesc{
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "CashOpera",
-			Handler:    _User_CashOpera_Handler,
+			StreamName:    "CashOpera",
+			Handler:       _User_CashOpera_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "GetUserInfo",
+			Handler:       _User_GetUserInfo_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "GetBalance",
+			Handler:       _User_GetBalance_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "User.proto",
 }
