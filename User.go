@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"rpcserver/protocol"
-	"rpcserver/slog"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -81,34 +80,34 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 	// 	})
 	// })
 
-	tablename := GetTableName(req.HallId)
-	result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
-	if err != nil {
-		slog.ErrorDB(err)
-		return &protocol.CashOperResponse{
-			ResultCode: -1,
-			Desc:       "update failed ",
-			Restult: &protocol.Result{
-				Amount:  req.Amount,
-				OrderSn: "",
-			},
-		}, fmt.Errorf("SQL exec failed!")
-	}
-	rows, err := result.RowsAffected()
-	if err != nil {
-		slog.ErrorDB(err)
-	}
-	if rows < 0 { //未修改成功
-		slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
-		return &protocol.CashOperResponse{
-			ResultCode: -1,
-			Desc:       "update failed ",
-			Restult: &protocol.Result{
-				Amount:  req.Amount,
-				OrderSn: "",
-			},
-		}, fmt.Errorf("SQL exec failed!")
-	}
+	// tablename := GetTableName(req.HallId)
+	// result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
+	// if err != nil {
+	// 	slog.ErrorDB(err)
+	// 	return &protocol.CashOperResponse{
+	// 		ResultCode: -1,
+	// 		Desc:       "update failed ",
+	// 		Restult: &protocol.Result{
+	// 			Amount:  req.Amount,
+	// 			OrderSn: "",
+	// 		},
+	// 	}, fmt.Errorf("SQL exec failed!")
+	// }
+	// rows, err := result.RowsAffected()
+	// if err != nil {
+	// 	slog.ErrorDB(err)
+	// }
+	// if rows < 0 { //未修改成功
+	// 	slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
+	// 	return &protocol.CashOperResponse{
+	// 		ResultCode: -1,
+	// 		Desc:       "update failed ",
+	// 		Restult: &protocol.Result{
+	// 			Amount:  req.Amount,
+	// 			OrderSn: "",
+	// 		},
+	// 	}, fmt.Errorf("SQL exec failed!")
+	// }
 
 	return &protocol.CashOperResponse{
 		ResultCode: 1,
