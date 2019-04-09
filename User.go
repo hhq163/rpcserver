@@ -2,14 +2,11 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"rpcserver/protocol"
 	"rpcserver/slog"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type User struct{}
@@ -31,6 +28,9 @@ func GetTableName(hall_id int32) string {
 
 //现金操作接口
 func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*protocol.CashOperResponse, error) {
+	if ctx.Err() == context.Canceled {
+		return nil, fmt.Errorf("Context Deadline happened!")
+	}
 	if req.HallId <= 0 || req.UserId <= 0 {
 		return &protocol.CashOperResponse{
 			ResultCode: -1,
@@ -43,43 +43,72 @@ func (u *User) CashOpera(ctx context.Context, req *protocol.CashOperRequest) (*p
 	}
 	// slog.Info("UserId:", req.UserId, ",AgentId:", req.AgentId, ",HallId:", req.HallId, ",UserName:", req.UserName, ", Amount:", req.Amount, "Type:", req.Type)
 
-	pushmongo(func() {
-		mgo := mgoSession.Copy()
-		defer mgo.Close()
+	// pushmongo(func() {
+	// 	mgo := mgoSession.Copy()
+	// 	defer mgo.Close()
 
-		doc := bson.M{
-			"order_sn":  "qxtestid",
-			"uid":       req.UserId,
-			"agent_id":  req.AgentId,
-			"hall_id":   req.HallId,
-			"user_name": req.UserName,
-			"type":      req.Type,
-			"amount":    req.Amount,
-			"add_time":  time.Now(),
-		}
+	// 	doc := bson.M{
+	// 		"order_sn":  "qxtestid",
+	// 		"uid":       req.UserId,
+	// 		"agent_id":  req.AgentId,
+	// 		"hall_id":   req.HallId,
+	// 		"user_name": req.UserName,
+	// 		"type":      req.Type,
+	// 		"amount":    req.Amount,
+	// 		"add_time":  time.Now(),
+	// 	}
 
-		if err := mgo.DB("").C("cash_record_test").Insert(doc); err != nil {
-			docjosn, _ := json.Marshal(doc)
-			slog.ErrorDB("cash_record failed err:", err, string(docjosn))
-			return
-		}
-		pushmysql(func() {
-			tablename := GetTableName(req.HallId)
-			result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
-			if err != nil {
-				slog.ErrorDB(err)
-				return
-			}
-			rows, err := result.RowsAffected()
-			if err != nil {
-				slog.ErrorDB(err)
-			}
-			if rows < 0 { //未修改成功
-				slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
-			}
+	// 	if err := mgo.DB("").C("cash_record_test").Insert(doc); err != nil {
+	// 		docjosn, _ := json.Marshal(doc)
+	// 		slog.ErrorDB("cash_record failed err:", err, string(docjosn))
+	// 		return
+	// 	}
+	// 	pushmysql(func() {
+	// 		tablename := GetTableName(req.HallId)
+	// 		result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
+	// 		if err != nil {
+	// 			slog.ErrorDB(err)
+	// 			return
+	// 		}
+	// 		rows, err := result.RowsAffected()
+	// 		if err != nil {
+	// 			slog.ErrorDB(err)
+	// 		}
+	// 		if rows < 0 { //未修改成功
+	// 			slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
+	// 		}
 
-		})
-	})
+	// 	})
+	// })
+
+	tablename := GetTableName(req.HallId)
+	result, err := mysqlDB.Exec(fmt.Sprintf("UPDATE %s SET money=money + ? WHERE hall_id=? AND uid=? LIMIT 1", tablename), req.Amount, req.HallId, req.UserId)
+	if err != nil {
+		slog.ErrorDB(err)
+		return &protocol.CashOperResponse{
+			ResultCode: -1,
+			Desc:       "update failed ",
+			Restult: &protocol.Result{
+				Amount:  req.Amount,
+				OrderSn: "",
+			},
+		}, fmt.Errorf("SQL exec failed!")
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		slog.ErrorDB(err)
+	}
+	if rows < 0 { //未修改成功
+		slog.ErrorDB("update money failed ,hall_id=", req.HallId, "user_id=", req.UserId)
+		return &protocol.CashOperResponse{
+			ResultCode: -1,
+			Desc:       "update failed ",
+			Restult: &protocol.Result{
+				Amount:  req.Amount,
+				OrderSn: "",
+			},
+		}, fmt.Errorf("SQL exec failed!")
+	}
 
 	return &protocol.CashOperResponse{
 		ResultCode: 1,
